@@ -42,14 +42,15 @@ $\text{*}$ Corresponding author: Easton R. White (eastonrwhite@gmail.com)
 
 
 ```{r load_packages,echo=F,warning=F,message=F}
+# This code was run with R version 4.0.0 (2020-04-20)
+# This code chunk sometimes needs to be run seperately once for proper package installation
+
 if (!require("pacman",character.only = TRUE))
   {
     install.packages("pacman",dep=TRUE)
     if(!require("pacman",character.only = TRUE)) stop("Package not found")
   }
 
-# Keeping below source for github package. Ask Easton whether pacman works for github packages or not.
-#devtools::install_github("rensa/stickylabeller")
 pacman::p_load(patchwork, dplyr, tidyr, ggplot2, ggrepel, viridis, usmap, stargazer,tidyquant,ggpubr,gridExtra,janitor,lubridate,tidyquant,purrr,magick,png,grid,readr)
 ```
 
@@ -381,7 +382,7 @@ We examined 2,800 fish and seafood markets in US across the US. We noted that `r
 
 # Alaska fish landings data 
 
-```{r,echo=F,cache=T,fig.cap='Alaskan weekly landings (pounds) for halibut (Hippoglossus stenolepis) and sablefish (Anoplopoma fimbria) for 2020 (black line) and past years (grey lines). Data is updated at https://www.fisheries.noaa.gov/alaska/commercial-fishing/fisheries-catch-and-landings-reports'}
+```{r,echo=F,cache=T,message=F,warning=F,fig.cap='Alaskan weekly landings (pounds) for halibut (Hippoglossus stenolepis) and sablefish (Anoplopoma fimbria) for 2020 (black line) and past years (grey lines). Data is updated at https://www.fisheries.noaa.gov/alaska/commercial-fishing/fisheries-catch-and-landings-reports'}
 # Pull in landings data
 alaska <- read.csv(file='cleaned_data/fish_landings/alaska_halibut_and_sablefish.csv',header=T)
 #remove_recent = which(halibut$MonthWeek %in% c('15-May','17-May') & halibut$Year==2020)
