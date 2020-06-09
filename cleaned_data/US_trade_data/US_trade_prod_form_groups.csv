@@ -1,0 +1,225 @@
+"date","year","month","trade.flow","prod.form","value"
+2018-01-01,"2018",1,"export","Dried, salted, etc.",2533062
+2018-01-01,"2018",1,"export","Frozen",118553550
+2018-01-01,"2018",1,"export","Live, Fresh or chilled",93073269
+2018-01-01,"2018",1,"export",NA,4914930
+2018-01-01,"2018",1,"import","Dried, salted, etc.",21534763
+2018-01-01,"2018",1,"import","Frozen",1015815580
+2018-01-01,"2018",1,"import","Live, Fresh or chilled",379997609
+2018-01-01,"2018",1,"import",NA,27138527
+2018-02-01,"2018",2,"export","Dried, salted, etc.",2892886
+2018-02-01,"2018",2,"export","Frozen",284306112
+2018-02-01,"2018",2,"export","Live, Fresh or chilled",121344387
+2018-02-01,"2018",2,"export",NA,3865433
+2018-02-01,"2018",2,"import","Dried, salted, etc.",22317653
+2018-02-01,"2018",2,"import","Frozen",821335815
+2018-02-01,"2018",2,"import","Live, Fresh or chilled",399473405
+2018-02-01,"2018",2,"import",NA,22513882
+2018-03-01,"2018",3,"export","Dried, salted, etc.",3128307
+2018-03-01,"2018",3,"export","Frozen",392572354
+2018-03-01,"2018",3,"export","Live, Fresh or chilled",93504311
+2018-03-01,"2018",3,"export",NA,4873892
+2018-03-01,"2018",3,"import","Dried, salted, etc.",23407863
+2018-03-01,"2018",3,"import","Frozen",842449150
+2018-03-01,"2018",3,"import","Live, Fresh or chilled",432459120
+2018-03-01,"2018",3,"import",NA,23161945
+2018-04-01,"2018",4,"export","Dried, salted, etc.",2688685
+2018-04-01,"2018",4,"export","Frozen",347981534
+2018-04-01,"2018",4,"export","Live, Fresh or chilled",89501555
+2018-04-01,"2018",4,"export",NA,5108405
+2018-04-01,"2018",4,"import","Dried, salted, etc.",18986404
+2018-04-01,"2018",4,"import","Frozen",765973751
+2018-04-01,"2018",4,"import","Live, Fresh or chilled",406896897
+2018-04-01,"2018",4,"import",NA,25213148
+2018-05-01,"2018",5,"export","Dried, salted, etc.",2369400
+2018-05-01,"2018",5,"export","Frozen",191690173
+2018-05-01,"2018",5,"export","Live, Fresh or chilled",99020248
+2018-05-01,"2018",5,"export",NA,5233246
+2018-05-01,"2018",5,"import","Dried, salted, etc.",22523864
+2018-05-01,"2018",5,"import","Frozen",1065038922
+2018-05-01,"2018",5,"import","Live, Fresh or chilled",487728511
+2018-05-01,"2018",5,"import",NA,26125306
+2018-06-01,"2018",6,"export","Dried, salted, etc.",3615363
+2018-06-01,"2018",6,"export","Frozen",203258884
+2018-06-01,"2018",6,"export","Live, Fresh or chilled",83978501
+2018-06-01,"2018",6,"export",NA,6440590
+2018-06-01,"2018",6,"import","Dried, salted, etc.",18952472
+2018-06-01,"2018",6,"import","Frozen",1068152525
+2018-06-01,"2018",6,"import","Live, Fresh or chilled",463156953
+2018-06-01,"2018",6,"import",NA,30481628
+2018-07-01,"2018",7,"export","Dried, salted, etc.",2992072
+2018-07-01,"2018",7,"export","Frozen",450260210
+2018-07-01,"2018",7,"export","Live, Fresh or chilled",123386699
+2018-07-01,"2018",7,"export",NA,4864995
+2018-07-01,"2018",7,"import","Dried, salted, etc.",20935975
+2018-07-01,"2018",7,"import","Frozen",1044260240
+2018-07-01,"2018",7,"import","Live, Fresh or chilled",415858639
+2018-07-01,"2018",7,"import",NA,26040008
+2018-08-01,"2018",8,"export","Dried, salted, etc.",5020320
+2018-08-01,"2018",8,"export","Frozen",575268962
+2018-08-01,"2018",8,"export","Live, Fresh or chilled",158884369
+2018-08-01,"2018",8,"export",NA,5786050
+2018-08-01,"2018",8,"import","Dried, salted, etc.",20605883
+2018-08-01,"2018",8,"import","Frozen",1067753928
+2018-08-01,"2018",8,"import","Live, Fresh or chilled",413095851
+2018-08-01,"2018",8,"import",NA,26704221
+2018-09-01,"2018",9,"export","Dried, salted, etc.",2862482
+2018-09-01,"2018",9,"export","Frozen",522680807
+2018-09-01,"2018",9,"export","Live, Fresh or chilled",150841321
+2018-09-01,"2018",9,"export",NA,4876520
+2018-09-01,"2018",9,"import","Dried, salted, etc.",20894709
+2018-09-01,"2018",9,"import","Frozen",1018494880
+2018-09-01,"2018",9,"import","Live, Fresh or chilled",372571653
+2018-09-01,"2018",9,"import",NA,23826559
+2018-10-01,"2018",10,"export","Dried, salted, etc.",2375012
+2018-10-01,"2018",10,"export","Frozen",256811086
+2018-10-01,"2018",10,"export","Live, Fresh or chilled",166189819
+2018-10-01,"2018",10,"export",NA,4420438
+2018-10-01,"2018",10,"import","Dried, salted, etc.",26289611
+2018-10-01,"2018",10,"import","Frozen",1128944556
+2018-10-01,"2018",10,"import","Live, Fresh or chilled",394267939
+2018-10-01,"2018",10,"import",NA,26245888
+2018-11-01,"2018",11,"export","Dried, salted, etc.",2518276
+2018-11-01,"2018",11,"export","Frozen",252101245
+2018-11-01,"2018",11,"export","Live, Fresh or chilled",121796728
+2018-11-01,"2018",11,"export",NA,5179389
+2018-11-01,"2018",11,"import","Dried, salted, etc.",28922903
+2018-11-01,"2018",11,"import","Frozen",1065040568
+2018-11-01,"2018",11,"import","Live, Fresh or chilled",360076905
+2018-11-01,"2018",11,"import",NA,33056142
+2018-12-01,"2018",12,"export","Dried, salted, etc.",2488512
+2018-12-01,"2018",12,"export","Frozen",138386717
+2018-12-01,"2018",12,"export","Live, Fresh or chilled",119546799
+2018-12-01,"2018",12,"export",NA,6393503
+2018-12-01,"2018",12,"import","Dried, salted, etc.",31515596
+2018-12-01,"2018",12,"import","Frozen",1060187662
+2018-12-01,"2018",12,"import","Live, Fresh or chilled",430294606
+2018-12-01,"2018",12,"import",NA,36510246
+2019-01-01,"2019",1,"export","Dried, salted, etc.",2943210
+2019-01-01,"2019",1,"export","Frozen",91113045
+2019-01-01,"2019",1,"export","Live, Fresh or chilled",106144404
+2019-01-01,"2019",1,"export",NA,3491532
+2019-01-01,"2019",1,"import","Dried, salted, etc.",19236381
+2019-01-01,"2019",1,"import","Frozen",932020471
+2019-01-01,"2019",1,"import","Live, Fresh or chilled",399524374
+2019-01-01,"2019",1,"import",NA,23798648
+2019-02-01,"2019",2,"export","Dried, salted, etc.",2983230
+2019-02-01,"2019",2,"export","Frozen",253359417
+2019-02-01,"2019",2,"export","Live, Fresh or chilled",81910844
+2019-02-01,"2019",2,"export",NA,2086337
+2019-02-01,"2019",2,"import","Dried, salted, etc.",21163013
+2019-02-01,"2019",2,"import","Frozen",764397172
+2019-02-01,"2019",2,"import","Live, Fresh or chilled",382272484
+2019-02-01,"2019",2,"import",NA,18138533
+2019-03-01,"2019",3,"export","Dried, salted, etc.",3011821
+2019-03-01,"2019",3,"export","Frozen",457407153
+2019-03-01,"2019",3,"export","Live, Fresh or chilled",70795753
+2019-03-01,"2019",3,"export",NA,2357626
+2019-03-01,"2019",3,"import","Dried, salted, etc.",23476819
+2019-03-01,"2019",3,"import","Frozen",806864211
+2019-03-01,"2019",3,"import","Live, Fresh or chilled",468524455
+2019-03-01,"2019",3,"import",NA,16893742
+2019-04-01,"2019",4,"export","Dried, salted, etc.",2625193
+2019-04-01,"2019",4,"export","Frozen",287460137
+2019-04-01,"2019",4,"export","Live, Fresh or chilled",80627711
+2019-04-01,"2019",4,"export",NA,1530936
+2019-04-01,"2019",4,"import","Dried, salted, etc.",26334473
+2019-04-01,"2019",4,"import","Frozen",811280181
+2019-04-01,"2019",4,"import","Live, Fresh or chilled",430018782
+2019-04-01,"2019",4,"import",NA,19739710
+2019-05-01,"2019",5,"export","Dried, salted, etc.",4404983
+2019-05-01,"2019",5,"export","Frozen",195955936
+2019-05-01,"2019",5,"export","Live, Fresh or chilled",72947355
+2019-05-01,"2019",5,"export",NA,2571784
+2019-05-01,"2019",5,"import","Dried, salted, etc.",24840870
+2019-05-01,"2019",5,"import","Frozen",1142455687
+2019-05-01,"2019",5,"import","Live, Fresh or chilled",486164597
+2019-05-01,"2019",5,"import",NA,23675158
+2019-06-01,"2019",6,"export","Dried, salted, etc.",1916319
+2019-06-01,"2019",6,"export","Frozen",184739369
+2019-06-01,"2019",6,"export","Live, Fresh or chilled",74935575
+2019-06-01,"2019",6,"export",NA,3741133
+2019-06-01,"2019",6,"import","Dried, salted, etc.",21697354
+2019-06-01,"2019",6,"import","Frozen",1068687497
+2019-06-01,"2019",6,"import","Live, Fresh or chilled",473822488
+2019-06-01,"2019",6,"import",NA,24092486
+2019-07-01,"2019",7,"export","Dried, salted, etc.",3872911
+2019-07-01,"2019",7,"export","Frozen",384825725
+2019-07-01,"2019",7,"export","Live, Fresh or chilled",87767322
+2019-07-01,"2019",7,"export",NA,4547813
+2019-07-01,"2019",7,"import","Dried, salted, etc.",24514447
+2019-07-01,"2019",7,"import","Frozen",1096427197
+2019-07-01,"2019",7,"import","Live, Fresh or chilled",437753412
+2019-07-01,"2019",7,"import",NA,24357068
+2019-08-01,"2019",8,"export","Dried, salted, etc.",5835831
+2019-08-01,"2019",8,"export","Frozen",543003019
+2019-08-01,"2019",8,"export","Live, Fresh or chilled",151310470
+2019-08-01,"2019",8,"export",NA,2532773
+2019-08-01,"2019",8,"import","Dried, salted, etc.",22668754
+2019-08-01,"2019",8,"import","Frozen",1091400225
+2019-08-01,"2019",8,"import","Live, Fresh or chilled",420288176
+2019-08-01,"2019",8,"import",NA,24083844
+2019-09-01,"2019",9,"export","Dried, salted, etc.",4950138
+2019-09-01,"2019",9,"export","Frozen",426952627
+2019-09-01,"2019",9,"export","Live, Fresh or chilled",134244463
+2019-09-01,"2019",9,"export",NA,2827516
+2019-09-01,"2019",9,"import","Dried, salted, etc.",24137066
+2019-09-01,"2019",9,"import","Frozen",988103013
+2019-09-01,"2019",9,"import","Live, Fresh or chilled",391792840
+2019-09-01,"2019",9,"import",NA,21506817
+2019-10-01,"2019",10,"export","Dried, salted, etc.",2499316
+2019-10-01,"2019",10,"export","Frozen",358434290
+2019-10-01,"2019",10,"export","Live, Fresh or chilled",167143473
+2019-10-01,"2019",10,"export",NA,1743254
+2019-10-01,"2019",10,"import","Dried, salted, etc.",31509795
+2019-10-01,"2019",10,"import","Frozen",1086869669
+2019-10-01,"2019",10,"import","Live, Fresh or chilled",368138586
+2019-10-01,"2019",10,"import",NA,21371256
+2019-11-01,"2019",11,"export","Dried, salted, etc.",4975396
+2019-11-01,"2019",11,"export","Frozen",216977674
+2019-11-01,"2019",11,"export","Live, Fresh or chilled",126812976
+2019-11-01,"2019",11,"export",NA,3294127
+2019-11-01,"2019",11,"import","Dried, salted, etc.",28763960
+2019-11-01,"2019",11,"import","Frozen",1010773963
+2019-11-01,"2019",11,"import","Live, Fresh or chilled",341800613
+2019-11-01,"2019",11,"import",NA,21075180
+2019-12-01,"2019",12,"export","Dried, salted, etc.",6434141
+2019-12-01,"2019",12,"export","Frozen",136845632
+2019-12-01,"2019",12,"export","Live, Fresh or chilled",106985766
+2019-12-01,"2019",12,"export",NA,2860607
+2019-12-01,"2019",12,"import","Dried, salted, etc.",31103103
+2019-12-01,"2019",12,"import","Frozen",1087454116
+2019-12-01,"2019",12,"import","Live, Fresh or chilled",424262076
+2019-12-01,"2019",12,"import",NA,25454489
+2020-01-01,"2020",1,"export","Dried, salted, etc.",2247470
+2020-01-01,"2020",1,"export","Frozen",89059649
+2020-01-01,"2020",1,"export","Live, Fresh or chilled",95746499
+2020-01-01,"2020",1,"export",NA,2260235
+2020-01-01,"2020",1,"import","Dried, salted, etc.",21615167
+2020-01-01,"2020",1,"import","Frozen",1034323886
+2020-01-01,"2020",1,"import","Live, Fresh or chilled",439678905
+2020-01-01,"2020",1,"import",NA,22413842
+2020-02-01,"2020",2,"export","Dried, salted, etc.",4573235
+2020-02-01,"2020",2,"export","Frozen",247487297
+2020-02-01,"2020",2,"export","Live, Fresh or chilled",46622814
+2020-02-01,"2020",2,"export",NA,1989498
+2020-02-01,"2020",2,"import","Dried, salted, etc.",24708580
+2020-02-01,"2020",2,"import","Frozen",833336594
+2020-02-01,"2020",2,"import","Live, Fresh or chilled",410653911
+2020-02-01,"2020",2,"import",NA,22636543
+2020-03-01,"2020",3,"export","Dried, salted, etc.",2637690
+2020-03-01,"2020",3,"export","Frozen",369613800
+2020-03-01,"2020",3,"export","Live, Fresh or chilled",50379781
+2020-03-01,"2020",3,"export",NA,1307103
+2020-03-01,"2020",3,"import","Dried, salted, etc.",27238976
+2020-03-01,"2020",3,"import","Frozen",790768628
+2020-03-01,"2020",3,"import","Live, Fresh or chilled",377417052
+2020-03-01,"2020",3,"import",NA,25934474
+2020-04-01,"2020",4,"export","Dried, salted, etc.",2740310
+2020-04-01,"2020",4,"export","Frozen",299103928
+2020-04-01,"2020",4,"export","Live, Fresh or chilled",47472322
+2020-04-01,"2020",4,"export",NA,529778
+2020-04-01,"2020",4,"import","Dried, salted, etc.",27255521
+2020-04-01,"2020",4,"import","Frozen",782634011
+2020-04-01,"2020",4,"import","Live, Fresh or chilled",271281277
+2020-04-01,"2020",4,"import",NA,12047329

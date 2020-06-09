@@ -1,0 +1,52 @@
+Region,seafood restaurant,seafood recipe,seafood delivery,sushi take out,bbq restaurant,category,date_range,year,country
+Louisiana,68%,17%,7%,1%,7%,food & drink,(1/1/20 - 5/15/20),2020,usa
+South Carolina,63%,15%,7%,<1%,15%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Maryland,56%,20%,12%,1%,11%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Florida,61%,14%,6%,2%,17%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Delaware,59%,22%,7%,,12%,food & drink,(1/1/20 - 5/15/20),2020,usa
+North Carolina,62%,14%,7%,1%,16%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Hawaii,50%,20%,5%,12%,13%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Mississippi,59%,22%,9%,,10%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Virginia,58%,20%,8%,1%,13%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Georgia,55%,18%,9%,1%,17%,food & drink,(1/1/20 - 5/15/20),2020,usa
+District of Columbia,51%,20%,18%,,11%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Alabama,55%,16%,6%,,23%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Massachusetts,57%,16%,11%,3%,13%,food & drink,(1/1/20 - 5/15/20),2020,usa
+New York,52%,18%,11%,2%,17%,food & drink,(1/1/20 - 5/15/20),2020,usa
+New Jersey,50%,18%,12%,2%,18%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Connecticut,55%,18%,12%,3%,12%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Texas,51%,17%,8%,1%,23%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Rhode Island,53%,22%,11%,,14%,food & drink,(1/1/20 - 5/15/20),2020,usa
+New Hampshire,58%,22%,8%,,12%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Maine,53%,24%,4%,,19%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Nevada,41%,21%,10%,5%,23%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Pennsylvania,51%,22%,11%,3%,13%,food & drink,(1/1/20 - 5/15/20),2020,usa
+California,47%,18%,8%,4%,23%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Tennessee,44%,18%,8%,1%,29%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Arkansas,47%,20%,8%,,25%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Illinois,42%,21%,7%,2%,28%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Kentucky,47%,23%,8%,,22%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Ohio,48%,21%,10%,1%,20%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Washington,43%,26%,5%,3%,23%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Missouri,40%,18%,7%,2%,33%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Oregon,45%,19%,5%,8%,23%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Indiana,46%,22%,9%,1%,22%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Alaska,54%,46%,,,,food & drink,(1/1/20 - 5/15/20),2020,usa
+Arizona,42%,19%,6%,4%,29%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Wyoming,,,,,100%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Oklahoma,41%,22%,6%,,31%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Michigan,40%,28%,7%,3%,22%,food & drink,(1/1/20 - 5/15/20),2020,usa
+West Virginia,57%,16%,,,27%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Kansas,47%,21%,3%,,29%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Colorado,36%,22%,9%,5%,28%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Vermont,39%,26%,,,35%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Wisconsin,37%,30%,5%,5%,23%,food & drink,(1/1/20 - 5/15/20),2020,usa
+New Mexico,35%,22%,11%,,32%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Minnesota,35%,24%,7%,8%,26%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Iowa,36%,22%,6%,4%,32%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Montana,28%,52%,,,20%,food & drink,(1/1/20 - 5/15/20),2020,usa
+North Dakota,56%,44%,,,,food & drink,(1/1/20 - 5/15/20),2020,usa
+Nebraska,33%,25%,10%,12%,20%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Utah,34%,20%,4%,12%,30%,food & drink,(1/1/20 - 5/15/20),2020,usa
+Idaho,28%,36%,,,36%,food & drink,(1/1/20 - 5/15/20),2020,usa
+South Dakota,,,,,,food & drink,(1/1/20 - 5/15/20),2020,usa
