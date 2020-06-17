@@ -82,7 +82,7 @@ We also found that `r round(100*nrow(news[news$Product.form.s..involved %in% c('
 # Figure 1a-e. Google trends 
 
 ```{r,echo=F,cache=T,message=F,warning=F,fig.cap='Previous and current relative Google trends for several search terms: (a) seafood restaurant, (b) seafood delivery, (c) seafood recipe, (d) sushi take out, and (e) bbq restaurant. Each year was fit with a simple loess smoother (solid lines) with corresponding 95% confidence intervals.'}
-
+#
 myfiles_ts = list.files(path='cleaned_data/Google_trends', pattern="multi.*.csv", full.names=TRUE)
 myfiles_map = list.files(path='cleaned_data/Google_trends', pattern="geo.*.csv", full.names=TRUE)
 
@@ -101,7 +101,7 @@ cl_map <- dat_csv_map %>%
 cl_ts$day <- mdy(cl_ts$day)
 #head(cl_ts)
 
-cl_ts$std_day<-c(0:135, 0:134, 0:134, 0:134, 0:132)
+cl_ts$std_day<-as.numeric(format(cl_ts$day,format='%j'))
 #head(cl_ts)
 
 lg_ts<-gather(cl_ts, search_term, google_value, seafood_restaurant, seafood_delivery,seafood_recipe,
@@ -127,8 +127,8 @@ gtrends <- ggplot(lg_ts, aes(x= std_day, y=google_value, group=as.factor(year), 
   scale_color_manual(values = c("gray", "gray","gray", "gray", "#00AFBB")) 
 gtrends
 
-ggsave(filename = 'figures/Figure1a-e.pdf',plot = gtrends,width = 7,height = 5,units='in')
-ggsave(filename = 'figures/Figure1a-e.png',plot = gtrends,width = 7,height = 5,units='in',dpi=1000)
+ggsave(filename = 'figures/Figure1a-e.pdf',plot = gtrends,width = 9,height = 5,units='in')
+ggsave(filename = 'figures/Figure1a-e.png',plot = gtrends,width = 9,height = 5,units='in',dpi=1000)
 
 ```
 
@@ -204,16 +204,18 @@ yoy$month_year <- factor(yoy$month_year, levels = c(
 
 
 g1 <- ggplot(yoy %>% filter(trade.flow == "import"), 
-             aes(x = month_year, y = yoy_percent, group = prod.form, colour = prod.form)) +
+             aes(x = month_year, y = yoy_percent, group = prod.form, colour = prod.form, linetype=prod.form)) +
+  scale_color_manual(values = c("#88b8e7","#ff4040") )+ 
   geom_line(size = 1.25) + 
+  scale_linetype(guide = 'none') +
   ylim(c(-50,50)) +
   geom_hline(yintercept = 0, linetype = "dashed") +
-labs(title = "imports", y = "", x = "", colour = "") + 
+labs(title = "A", y = "Imports", x = "", colour = "") + 
   theme_classic() + 
   theme(
     legend.position = 'none',
     axis.line = element_line(colour = "black",size=0.6),
-    plot.title = element_text(hjust = 0.5), 
+    plot.title = element_text(hjust = 0.98), 
     axis.text.x = element_blank(),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
@@ -223,16 +225,18 @@ labs(title = "imports", y = "", x = "", colour = "") +
 #g1
 
 g2 <- ggplot(yoy %>% filter(trade.flow == "export"), 
-             aes(x = month_year, y = yoy_percent, group = prod.form, colour = prod.form)) +
+             aes(x = month_year, y = yoy_percent, group = prod.form, colour = prod.form, linetype=prod.form)) +
+  scale_color_manual(values = c("#88b8e7","#ff4040") )+ 
   ylim(c(-50,50)) +
   geom_line(size = 1.25) + 
   geom_hline(yintercept = 0, linetype = "dashed") +
-labs(title = "exports", y = "", x = "", colour = "") + 
+labs(title = "B", y = "Exports", x = "", colour = "") +
+  scale_linetype(guide = 'none')+
   theme_classic() + 
   theme(
     legend.position = 'bottom',
     axis.line = element_line(colour = "black",size=0.6),
-    plot.title = element_text(hjust = 0.5),
+    plot.title = element_text(hjust = 0.98),
     axis.text.x = element_text(angle = 60, hjust = 1),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
@@ -241,8 +245,8 @@ labs(title = "exports", y = "", x = "", colour = "") +
                                     size = 0.5, linetype = "solid")) 
 #g2
 
-trade_fig = ggarrange(g1, g2, nrow = 2, ncol = 1, common.legend = TRUE, legend="bottom")
-annotate_figure(trade_fig,left = text_grob("Percent year over year", color = "black", rot = 90,size=14))
+trade_fig = ggarrange(g1, g2, nrow = 2, ncol = 1, common.legend = TRUE, legend="top")
+annotate_figure(trade_fig,left = text_grob("Percent year over year",color = "black", rot = 90,size=14), bottom = text_grob("Time",color = "black",size=14))
 
 
 ```
@@ -266,7 +270,7 @@ dev.off()
 
 ```{r,echo=F,eval=F,message=F,warning=F,fig.cap='State-level monthly mean of normalized (see Methods) foot traffic data for fish and seafood markets for the beginning of 2019 and 2020.',fig.height=6}
 markets_all  <- read.csv('cleaned_data/foot_traffic/US_seafood_market_foot_traffic.csv',header=T)
-
+#
 library(dplyr)
 
 library(usmap)
@@ -310,7 +314,7 @@ visits_by_state_subset <- visits_by_state %>%
 #   theme(legend.position = "top",panel.background = element_rect(color = "black"),plot.caption = element_text(size=16)) +
 #   labs(fill = 'Normalized seafood market visits') + labs(caption = paste(Year,Month,sep='-'))
 
-foot_traffic_map2020 <- plot_usmap(data = visits_by_state_subset %>% filter(year==2020), values = "percent_change", labels=FALSE) + scale_fill_viridis(begin=0,end=1,limits = c(0.45, 1.6)) + guides(fill = guide_colorbar(barwidth = 8)) + 
+foot_traffic_map2020 <- plot_usmap(data = visits_by_state_subset %>% filter(year==2020), values = "percent_change", labels=FALSE) + scale_fill_viridis(begin=0,end=1,limits = c(0.45, 1.6),na.value="lightgrey") + guides(fill = guide_colorbar(barwidth = 8)) + 
   theme(legend.position = "top",panel.background = element_rect(color = "black"),plot.caption = element_text(size=16,hjust = 0)) +
   labs(fill = 'Percent change') + labs(caption = paste('Percent change for ',Months[Month],sep=''))
 
@@ -409,7 +413,7 @@ totals <- alaska %>%
 ```
 
 
-There were `r round(100-100*with(totals,total_catch[Year==2020 & Species=='halibut'])/mean(with(totals,total_catch[Year<2020 & Species=='halibut'])),1)`% declines in Alaskan halibut landings in 2020 compared to the previous two years. There were `r round(100-100*with(totals,total_catch[Year==2020 & Species=='sablefish'])/mean(with(totals,total_catch[Year<2020 & Species=='sablefish'])),1)`% declines in Alaskan sablefish landings in 2020 compared to the previous two years.
+For the first `r max_week_current_year` weeks of the year, there were `r round(100-100*with(totals,total_catch[Year==2020 & Species=='halibut'])/mean(with(totals,total_catch[Year<2020 & Species=='halibut'])),1)`% declines in Alaskan halibut landings in 2020 compared to the previous two years. There were `r round(100-100*with(totals,total_catch[Year==2020 & Species=='sablefish'])/mean(with(totals,total_catch[Year<2020 & Species=='sablefish'])),1)`% declines in Alaskan sablefish landings in 2020 compared to the previous two years.
 
 <!--
 # References
