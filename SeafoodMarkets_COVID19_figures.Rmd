@@ -10,7 +10,7 @@ header-includes: \usepackage{float} \usepackage{lineno} \usepackage{setspace}
   - This work has not yet been peer-reviewed}} \fancyfoot[RE,RO]{\thepage} \renewcommand{\headrulewidth}{0pt}
 output:
   pdf_document:
-    fig_caption: false
+    fig_caption: true
     keep_tex: yes
     number_sections: no
   word_document: default
@@ -22,13 +22,13 @@ output:
 
 
 \begin{center}
-\textbf{\Large Figures and analyses for: Early effects of COVID-19 interventions on US fisheries and seafood}
+\textbf{\Large Figures and analyses for: Early effects of COVID-19 on US fisheries and seafood consumption}
 \vspace{5 mm}
 	
-\textsc{Easton R. White$^{a,b,*}$, Halley E. Froehlich$^{c,d}$, Jessica A. Gephart$^{e}$, Richard S. Cottrell$^{f}$, Trevor A. Branch$^{g}$, Julia K. Baum$^{h}$}
+\textsc{Easton R. White$^{a,b,*}$, Halley E. Froehlich$^{c,d}$, Jessica A. Gephart$^{e}$, Richard S. Cottrell$^{f}$, Trevor A. Branch$^{g}$, Rahul Agrawal Bejarano$^{h}$, Julia K. Baum$^{i}$}
 \vspace{3 mm}
 
-\small{$^a$Biology Department, University of Vermont, Burlington, VT, 05405, USA; $^b$Gund Institute for Environment, University of Vermont, Burlington, VT, 05405, USA; $^c$Ecology, Evolution, and Marine Biology, University of California, Santa Barbara, CA, 93106, USA; $^d$Environmental Studies, University of California, Santa Barbara, CA, 93106, USA; $^e$Department of Environmental Science, American University, Washington DC 20016; $^f$National Center for Ecological Analysis and Synthesis, University of California, Santa Barbara, CA, 93101; $^g$School of Aquatic and Fishery Sciences, Box 355020, University of Washington, Seattle, WA, 98195, USA; $^h$Department of Biology, University of Victoria, Victoria, British Columbia, V8W 2Y2, Canada}
+\small{$^a$Biology Department, University of Vermont, Burlington, VT, 05405, USA; $^b$Gund Institute for Environment, University of Vermont, Burlington, VT, 05405, USA; $^c$Ecology, Evolution, and Marine Biology, University of California, Santa Barbara, CA, 93106, USA; $^d$Environmental Studies, University of California, Santa Barbara, CA, 93106, USA; $^e$Department of Environmental Science, American University, Washington DC 20016; $^f$National Center for Ecological Analysis and Synthesis, University of California, Santa Barbara, CA, 93101; $^g$School of Aquatic and Fishery Sciences, Box 355020, University of Washington, Seattle, WA, 98195, USA; $^h$School of Environment and Sustainability, University of Michigan, Ann Arbor, MI 48109, USA; $^i$Department of Biology, University of Victoria, Victoria, British Columbia, V8W 2Y2, Canada}
 
 
 $\text{*}$ Corresponding author: Easton R. White (eastonrwhite@gmail.com)
@@ -40,6 +40,9 @@ $\text{*}$ Corresponding author: Easton R. White (eastonrwhite@gmail.com)
 
 \clearpage
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F,warning=F,message=F)
+```
 
 ```{r load_packages,echo=F,warning=F,message=F}
 # This code was run with R version 4.0.0 (2020-04-20)
@@ -51,18 +54,20 @@ if (!require("pacman",character.only = TRUE))
     if(!require("pacman",character.only = TRUE)) stop("Package not found")
   }
 
-pacman::p_load(patchwork, dplyr, tidyr, ggplot2, ggrepel, viridis, usmap, stargazer,tidyquant,ggpubr,gridExtra,janitor,lubridate,tidyquant,purrr,magick,png,grid,readr)
+pacman::p_load(patchwork, dplyr, tidyr, ggplot2, ggrepel, viridis, usmap, stargazer,tidyquant,ggpubr,gridExtra,janitor,lubridate,tidyquant,purrr,magick,png,grid,readr,scales)
 ```
 
 
 # COVID-19 and seafood news in USA
 
 ```{r,echo=F}
-news <- read.csv('cleaned_data/Covid-19 Seafood Impacts (Responses) - Form Responses 1.csv',header=T)
+news <- read.csv('cleaned_data/Covid-19 Seafood Impacts (Responses) - Form Responses V2.csv',header=T)
 
 US_only <- grep(pattern = 'US',x=news$Countries.involved..multiple.separated.by.semicolons.,ignore.case = F)
+UnitedStates_only <- grep(pattern = 'United States',x=news$Countries.involved..multiple.separated.by.semicolons.,ignore.case = F)
 
-news <- news[US_only,]
+news <- news[c(US_only,UnitedStates_only),]
+
 
 #write.csv(x = news,file='US_only.csv' )
 
@@ -76,120 +81,181 @@ news <- news[US_only,]
 
 We collected `r nrow(news)` articles related to COVID-19 and US seafood. Of these articles, `r round(100*nrow(news[news$Production.scale.involved=='Small-scale',])/nrow(news),1)` percent focused on small-scale fisheries, `r round(100*nrow(news[news$Production.scale.involved=='Industrial',])/nrow(news),1)` on industrial fisheries, and `r round(100*nrow(news[news$Production.scale.involved=='Small-scale and Industrial',])/nrow(news),1)` which discussed both.
 
-We also found that `r round(100*nrow(news[news$Product.form.s..involved %in% c('Fresh','Live'),])/nrow(news),1)` perecnt of articles highlighted effects on fresh products specifically, the largest percentage for any one product form.
+We also found that `r round(100*nrow(news[news$Product.form.s..involved %in% c('Fresh','Live'),])/nrow(news),1)` percent of articles highlighted effects on fresh products specifically, the largest percentage for any one product form.
 
 
-# Figure 1a-e. Google trends 
-
-```{r,echo=F,cache=T,message=F,warning=F,fig.cap='Previous and current relative Google trends for several search terms: (a) seafood restaurant, (b) seafood delivery, (c) seafood recipe, (d) sushi take out, and (e) bbq restaurant. Each year was fit with a simple loess smoother (solid lines) with corresponding 95% confidence intervals.'}
-#
-myfiles_ts = list.files(path='cleaned_data/Google_trends', pattern="multi.*.csv", full.names=TRUE)
-myfiles_map = list.files(path='cleaned_data/Google_trends', pattern="geo.*.csv", full.names=TRUE)
-
-#Read every csv within the designated folder
-dat_csv_ts = plyr::ldply(myfiles_ts, read_csv)
-dat_csv_map = plyr::ldply(myfiles_map, read_csv)
-
-#head(dat_csv_ts)
-#unique(dat_csv_ts$year)
-
-cl_ts <- dat_csv_ts %>%
-  clean_names
-cl_map <- dat_csv_map %>%
-  clean_names
-
-cl_ts$day <- mdy(cl_ts$day)
-#head(cl_ts)
-
-cl_ts$std_day<-as.numeric(format(cl_ts$day,format='%j'))
-#head(cl_ts)
-
-lg_ts<-gather(cl_ts, search_term, google_value, seafood_restaurant, seafood_delivery,seafood_recipe,
-              sushi_take_out, bbq_restaurant, factor_key=TRUE)
-#head(lg_ts)
-
-dates <- unique(cl_ts$day)
-#dates
 
 
-# Build figure (panels A-E)
 
-gtrends <- ggplot(lg_ts, aes(x= std_day, y=google_value, group=as.factor(year), fill=as.factor(year))) +
-  geom_line(aes(color=as.factor(year)), size=0.2)+
-  labs(x = "Time", y="Google Trend Value")+
-  #scale_x_date(date_labels = "%Y %b %d")+
-  #geom_vline(xintercept = as.numeric(as.Date(c("2020-03-11"))), linetype=2,color="red")+
-  geom_vline(xintercept = 70, linetype=2,color="#FC4E07", cex=0.8)+
-  theme_classic()+
-  facet_wrap(~search_term, scales = "free")+
-  geom_smooth(aes(color = as.factor(year), fill = as.factor(year)), method = "loess") +
-  scale_fill_manual(values = c("gray", "gray","gray", "gray", "#00AFBB"))+
-  scale_color_manual(values = c("gray", "gray","gray", "gray", "#00AFBB")) 
-gtrends
+# Figure 1
 
-ggsave(filename = 'figures/Figure1a-e.pdf',plot = gtrends,width = 9,height = 5,units='in')
-ggsave(filename = 'figures/Figure1a-e.png',plot = gtrends,width = 9,height = 5,units='in',dpi=1000)
+```{r,echo=F,eval=T,fig.cap='(c) Distribution of impacts by production type, production scale, product form, and species groups affected. An impact is defined as explicitly reported on in a news article.'}
 
+require(stringr)
+#par(mfrow=c(2,2),mar=c(3,6,1,5),oma=c(2,1,0,0))
+
+prod <- table(news$Production.type.involved)
+prod<- prod[names(prod) %in% c('Capture fishery','Both','Aquaculture','Unclear')]
+names(prod) <- c("Aquaculture", "Both", "Capture\nfishery", "Unclear")
+
+prod <- data.frame(names=names(prod),count=as.numeric(prod))
+
+p_prod  <- ggplot(data=prod,aes(x=count,y=names)) +
+    geom_bar(stat="identity") + 
+  theme_bw() + theme(panel.border = element_blank(),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line()) + ggtitle('Production type') + xlab('') + ylab('')
+
+#col_pal <- viridis(length(prod),begin=0.2,end=0.8)
+
+#prod_plot=barplot(prod, main="Production type",horiz = T,names.arg = NA,xlim=c(0,101))
+#mtext(text = names(prod),side=2,las=2,at = prod_plot,line = 0.3,cex=1.2)
+
+scale <- table(news$Production.scale.involved)
+scale <- scale[names(scale) %in% c('Industrial','Recreational','Small-scale','Small-scale and Industrial','Unclear')]
+names(scale) <-c('Industrial','Recreational','Small-scale','Small-scale\nand Industrial','Unclear')
+scale <- data.frame(names=names(scale),count=as.numeric(scale))
+
+p_scale  <- ggplot(data=scale,aes(x=count,y=names)) +
+    geom_bar(stat="identity") + 
+  theme_bw() + theme(panel.border = element_blank(),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line()) + ggtitle('Production scale') + xlab('') + ylab('')
+
+
+#pie(scale, labels = names(scale), main="Production scale")
+#scale_plot=barplot(scale, main="Production type",horiz = T,names.arg = NA,xlim=c(0,60))
+#mtext(text = names(scale),side=2,las=2,at = scale_plot,line = 0.3,cex=1.2)
+
+product_forms <- c(
+ "All",
+ "Canned",
+ "Fresh",
+ "Frozen",
+ "Live"
+)
+my_df<-as.data.frame(cbind(product_forms,str_count(paste(news$Product.form.s..involved,collapse = ''), product_forms)))
+
+form <- as.numeric(my_df$V2)
+names(form) <- product_forms
+
+form <- data.frame(names=names(form),count=as.numeric(form))
+
+p_form  <- ggplot(data=form,aes(x=count,y=names)) +
+    geom_bar(stat="identity") + 
+  theme_bw() + theme(panel.border = element_blank(),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line()) + ggtitle('Product form') + xlab('') + ylab('')
+
+#form_plot=barplot(form, main="Production type",horiz = T,names.arg = NA,xlim=c(0,50))
+#mtext(text = names(form),side=2,las=2,at = form_plot,line = 0.3,cex=1.2)
+
+#pie(x=as.numeric(my_df$V2), labels = my_df$product_forms, main="Product forms")
+
+
+general_groups <- c(
+  "Freshwater fishes",
+  "Diadromous fishes",
+  "Marine fishes",
+  "Crustaceans",
+  "Molluscs"
+)
+
+library(stringr)
+my_df<-as.data.frame(cbind(general_groups,str_count(paste(news$Species.groups.involved..if.known.,collapse = ''), general_groups)))
+
+groups <- as.numeric(my_df$V2)
+names(groups) <- general_groups
+
+groups <- data.frame(names=names(groups),count=as.numeric(groups))
+
+p_groups <- ggplot(data=groups,aes(x=count,y=names)) +
+    geom_bar(stat="identity") + 
+  theme_bw() + theme(panel.border = element_blank(),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line()) + ggtitle('Species groups') + xlab('') + ylab('')
+
+#groups_plot=barplot(groups, main="Production type",horiz = T,names.arg = NA,xlim=c(0,50))
+#mtext(text = names(groups),side=2,las=2,at = groups_plot,line = 0.3,cex=1.2)
+#pie(x=as.numeric(my_df$V2), labels = my_df$general_groups, main="Species group")
+
+#mtext(text='Number of articles',cex=1.4,side = 1,outer = T,line = 0)
 ```
 
 
+```{r,echo=F,eval=T,results='hide',fig.show='hide'}
 
-# Figure 1f. Seafood market foot traffic over time
+oxford <- read.csv(file='cleaned_data/OxCGRT_latest.csv',header = T)
 
-```{r,echo=F,eval=F,cache=T,message=F,warning=F,fig.cap='Panel (f) is the rolling mean of normalized (see methods) foot traffic data for all US fish and seafood markets.'}
+require(dplyr)
 
-## IMPORTANT NOTE: We are not allowed to post the raw foot traffic data to Github. This can be obtained from the corresponding author (eastonrwhite@gmail.com) or directly from SafeGraph ##
+us <- oxford %>%
+  filter(CountryCode == 'USA') %>%
+  filter(RegionName == '') %>%
+  mutate(Date = as.Date(as.character(Date),format='%Y%m%d'))
+
+us$new_deaths <- c(NA,us$ConfirmedDeaths[2:nrow(us)]-us$ConfirmedDeaths[1:(nrow(us)-1)])
+
+#require(ggplot2)
+require(scales)
+p1<- ggplot() + geom_line(data=us,aes(x=Date,y=1,color=StringencyIndex),size=100) +   scale_color_distiller(type = 'div',palette='RdYlGn',na.value="lightgrey",direction=-1,limits=c(0,100)) + theme_bw() + theme(legend.position='blank',axis.title.x = element_blank(),axis.title.y = element_blank(),axis.text = element_blank(),axis.ticks=element_blank(),panel.border = element_blank(),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line=element_blank()) + labs(color='Lockdown Stringency Index') +   guides(colour = guide_colourbar(barwidth = 15)) +
+  scale_x_date(date_breaks = "1 month", 
+                 labels=date_format("%b"),
+                 limits = as.Date(c('2020-01-01','2020-10-01')),expand = expand_scale(mult = c(0, 0), add = c(8, 0))) + scale_y_continuous(expand = expand_scale(mult = c(0, 0), add = c(0, 0)))  + labs(title = ('(a)'))
 
 
-markets_all  <- read.csv('cleaned_data/foot_traffic/US_seafood_market_foot_traffic.csv',header=T)
+library(ggpubr)
+p1_colorbar<- ggplot() + geom_line(data=us,aes(x=Date,y=1,color=StringencyIndex),size=6) +   scale_color_distiller(type = 'div',palette='RdYlGn',na.value="lightgrey",direction=-1,limits=c(0,100)) + theme(legend.position='top') + labs(color='Lockdown Stringency Index') +   guides(colour = guide_colourbar(barwidth = 15))
+p1_leg <- get_legend(p1_colorbar)
+p1_leg=as_ggplot(p1_leg)
 
-markets_all$date <- as.Date(markets_all$date)
 
-per_day_stats = markets_all %>%
-  group_by(date) %>%
-  dplyr::summarize(total_visits = sum(visits), total_devices = mean(total_devices_seen_US_day)) %>%
-  mutate(total_visits_per_device = total_visits/total_devices)
+p2<- ggplot() + geom_line(data=us,aes(x=Date,y=2,color=new_deaths),size=100) +   scale_color_distiller(type = 'div',palette='Reds',na.value="lightgrey",direction=1,lim=c(0,5000)) + theme_bw() + theme(legend.position='blank',axis.title.x = element_blank(),axis.title.y = element_blank(),axis.text = element_blank(),axis.ticks=element_blank(),panel.border = element_blank(),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line=element_blank()) + labs(color='US COVID-19 deaths') +   guides(colour = guide_colourbar(barwidth = 15)) +
+  scale_x_date(date_breaks = "1 month", 
+                 labels=date_format("%b"),
+                 limits = as.Date(c('2020-01-01','2020-10-01')),expand = expand_scale(mult = c(0, 0), add = c(8, 0))) + scale_y_continuous(expand = expand_scale(mult = c(0, 0), add = c(-2, -2)),limits = c(1.99,2.01))  + labs(title = ('(b)'))
 
-rollmean_visits <- per_day_stats %>%
-  tq_mutate(
-    # tq_mutate args
-    select     = total_visits_per_device,
-    mutate_fun = rollapply, 
-    width      = 7,
-    align      = "right",
-    FUN        = mean,
-    col_rename = "mean_7"
-  ) 
+library(ggpubr)
+p2_colorbar<- ggplot() + geom_line(data=us,aes(x=Date,y=2,color=new_deaths),size=6) +   scale_color_distiller(type = 'div',palette='Reds',na.value="lightgrey",direction=1,lim=c(0,5000)) + theme(legend.position='top') + labs(color='US COVID-19 deaths') +   guides(colour = guide_colourbar(barwidth = 15))
+p2_leg <- get_legend(p2_colorbar)
+p2_leg=as_ggplot(p2_leg)
 
-rollmean_visits$year = as.numeric(format(rollmean_visits$date,'%Y'))
-rollmean_visits$julian_day = as.numeric(format(rollmean_visits$date,'%j'))
+lay <- rbind(c(1,1,1,2,2,2),
+             c(3,3,3,3,3,3),
+             c(4,4,4,4,4,4),
+             c(5,5,5,5,5,5),
+             c(5,5,5,5,5,5),
+             c(5,5,5,5,5,5),
+             c(5,5,5,5,5,5),
+             c(6,6,8,8,8,8),
+             c(6,6,8,8,8,8),
+             c(6,6,8,8,8,8),
+             c(6,6,8,8,8,8),
+             c(6,6,8,8,8,8),
+             c(6,6,8,8,8,8))
+require(gridExtra)
 
-write.csv(x = rollmean_visits,file = 'cleaned_data/rollmean_foot_traffic_visits.csv',quote = F,row.names = F)
 
-temporal <- ggplot(data = rollmean_visits,aes(x=julian_day,y=mean_7,color=as.factor(year))) + geom_line(size=1.5) + 
-  theme_classic() + ylab("Normalized US seafood market foot traffic") + xlab('Day of year') + theme(legend.position = 'none',axis.title.x = element_text(size = 18),axis.title.y = element_text(size = 18),panel.border = element_blank(),panel.grid.major = element_blank(),panel.grid.minor = element_blank(), axis.line = element_line(colour = "black",size=2),axis.text.y = element_text(size=16,color='black'),axis.text.x = element_text(size=22,color='black'))  + geom_vline(xintercept = 71,color='red',size=2.5,linetype='dashed')
-  #  geom_label(x=125, y=5e-04, label="2020",color='black') + #geom_label(x=350, y=8e-04, label="2019",color='black') + 
-#temporal
+### Include gdelt code
+source('scripts/build_fig1_news_plots.R')
 
-ggsave(filename = 'figures/Figure1f.pdf',plot = temporal,width = 7,height = 7,units='in')
-ggsave(filename = 'figures/Figure1f.png',plot = temporal,width = 7,height = 7,units='in',dpi=1000)
+ gA <- ggplotGrob(p_prod)
+ gB <- ggplotGrob(p_scale)
+ gC <- ggplotGrob(p_form)
+ gD <- ggplotGrob(p_groups)
+ maxWidth = grid::unit.pmax(gA$widths[2:5], gB$widths[2:5], gC$widths[2:5], gD$widths[2:5])
+ gA$widths[2:5] <- as.list(maxWidth)
+ gB$widths[2:5] <- as.list(maxWidth)
+ gC$widths[2:5] <- as.list(maxWidth)
+ gD$widths[2:5] <- as.list(maxWidth)
+ 
+mini_news <- ggarrange(gA,gB,gC,gD,ncol=2, nrow=2, labels=c('(e)','(f)','(g)','(h)'),label.x = 0.9, label.y = 1,align='hv',hjust=0,font.label=list(size = 12, color = "black", face = "plain", family = NULL))
 
-#require(ggpubr)
-#figure=ggarrange(temporal, foot_traffic_map, ncol=2, nrow=1, common.legend = FALSE, labels=c('(a)','(b)'),label.x = 0.85, label.y = 0.95,font.label='plain')
-#figure=annotate_figure(figure,bottom = text_grob(" ", color = "black",hjust = 0.9,vjust=-1, x = 0.6, size = 10),left = text_grob(" ", color = "black", rot = 90,size=10,vjust=2,hjust=0.4))
+combined=grid.arrange(p1_leg,p2_leg,p1,p2,time,g,mini_news, layout_matrix = lay)
+
+ggsave(file='fig1.png',plot=combined,width = 10,height=8,units = 'in',dpi = 500)
 ```
 
-
-```{r, echo=F,eval=T,message=F,warning=F,fig.height=4,fig.cap='Panel (f) is the rolling mean of normalized (see methods) foot traffic data for all US fish and seafood markets.'}
+```{r, echo=F,eval=T,message=F,warning=F,fig.height=6,fig.cap='(a) Timeline of key events in the US seafood industry related to COVID-19 along with the government lockdown stringency index (“17 indicators aggregated reporting a number between 1 and 100 to reflect the level of government action”, Hale et al. 2020), COVID-19 related deaths per day in the US.'}
 
 # This code displays code even if SafeGraph data is not loaded
 
-img1_path <- "figures/Figure1f.png"
+img1_path <- "figures/fig1.png"
 img1 <- readPNG(img1_path, native = TRUE, info = TRUE)
 grid.raster(img1)
 ```
-
-\clearpage
 
 
 # Figure 2. US seafood import and export data
@@ -200,7 +266,7 @@ df <- read.csv("cleaned_data/US_trade_data/US_trade_prod_form_groups.csv")
 yoy <- read.csv("cleaned_data/US_trade_data/US_trade_yoy_prod_form_groups.csv")
 
 yoy$month_year <- factor(yoy$month_year, levels = c(
-  "May 2019", "Jun 2019", "Jul 2019", "Aug 2019", "Sep 2019", "Oct 2019","Nov 2019", "Dec 2019", "Jan 2020", "Feb 2020", "Mar 2020", "Apr 2020"))
+  "May 2019", "Jun 2019", "Jul 2019", "Aug 2019", "Sep 2019", "Oct 2019","Nov 2019", "Dec 2019", "Jan 2020", "Feb 2020", "Mar 2020", "Apr 2020","May 2020", "Jun 2020","Jul 2020","Aug 2020"))
 
 
 g1 <- ggplot(yoy %>% filter(trade.flow == "import"), 
@@ -210,7 +276,7 @@ g1 <- ggplot(yoy %>% filter(trade.flow == "import"),
   scale_linetype(guide = 'none') +
   ylim(c(-50,50)) +
   geom_hline(yintercept = 0, linetype = "dashed") +
-labs(title = "A", y = "Imports", x = "", colour = "") + 
+labs(title = "(a)", y = "Imports", x = "", colour = "") + 
   theme_classic() + 
   theme(
     legend.position = 'none',
@@ -230,7 +296,7 @@ g2 <- ggplot(yoy %>% filter(trade.flow == "export"),
   ylim(c(-50,50)) +
   geom_line(size = 1.25) + 
   geom_hline(yintercept = 0, linetype = "dashed") +
-labs(title = "B", y = "Exports", x = "", colour = "") +
+labs(title = "(b)", y = "Exports", x = "", colour = "") +
   scale_linetype(guide = 'none')+
   theme_classic() + 
   theme(
@@ -251,12 +317,14 @@ annotate_figure(trade_fig,left = text_grob("Percent year over year",color = "bla
 
 ```
 
+
+
 ```{r,echo=F,results='hide'}
 jpeg(file="figures/figure2_US_trade.jpeg", width = 3, height = 6, units = "in",res=1000)
 trade_fig=grid.arrange(
     arrangeGrob(g1,g2,nrow=2,heights=c(.35,.5)))
 
-annotate_figure(trade_fig,left = text_grob("Percent year over year", color = "black", rot = 90,size=14))
+annotate_figure(trade_fig,left = text_grob("Percent year over year", color = "black", hjust = 0.25,rot = 90,size=14))
 dev.off()
 
 ```
@@ -266,10 +334,221 @@ dev.off()
 
 
 
-# Video S1. Seafood market foot traffic per state over time (Jan - Mar)
+
+
+# Figure 3a-e. Google trends 
+
+```{r,echo=F,cache=T,message=F,warning=F,fig.cap='\\textbf{US seafood consumer demand.} Previous and current relative Google trends for several search terms: (a) seafood restaurant, (b) seafood delivery, (c) seafood recipe, (d) sushi take out, and (e) bbq restaurant (as a control). Panel (f) is the rolling mean of normalized (see methods) foot traffic data for all US fish and seafood markets.'}
+#
+myfiles_ts = list.files(path='cleaned_data/Google_trends', pattern="multi.*.csv", full.names=TRUE)
+
+#Read every csv within the designated folder
+dat_csv_ts = plyr::ldply(myfiles_ts, read_csv)
+#dat_csv_map = plyr::ldply(myfiles_map, read_csv)
+
+#head(dat_csv_ts)
+#unique(dat_csv_ts$year)
+
+cl_ts <- dat_csv_ts %>%
+  clean_names
+#cl_map <- dat_csv_map %>%
+  clean_names
+
+cl_ts$day <- mdy(cl_ts$day)
+#head(cl_ts)
+
+cl_ts$std_day<-as.numeric(format(cl_ts$day,format='%j'))
+#head(cl_ts)
+
+lg_ts<-gather(cl_ts, search_term, google_value, seafood_restaurant, seafood_delivery,seafood_recipe,
+              sushi_take_out, bbq_restaurant, factor_key=TRUE)
+lg_ts$m_day <- as.Date(lg_ts$std_day)
+
+dates <- unique(cl_ts$day)
+#dates
+
+
+# Build figure (panels A-E)
+
+trends1 <- ggplot(lg_ts %>% filter(search_term == 'seafood_restaurant'), aes(x= m_day, y=google_value, group=as.factor(year), fill=as.factor(year))) +
+  geom_line(aes(color=as.factor(year)), size=1)+
+  labs(x = " ", y=" ")+
+  scale_x_date(date_labels = "%b")+
+  geom_vline(xintercept = as.numeric(as.Date(c("1970-03-11"))), linetype=2,color="red")+
+  theme_classic()+
+  scale_fill_manual(values = c("gray", "gray","gray", "gray", "black"))+
+  scale_color_manual(values = c("gray", "gray","gray", "gray", "black")) + theme(legend.position = "none",plot.margin = margin(0.5,0,0,0, "cm"))
+
+trends2 <- ggplot(lg_ts %>% filter(search_term == 'seafood_delivery'), aes(x= m_day, y=google_value, group=as.factor(year), fill=as.factor(year))) +
+  geom_line(aes(color=as.factor(year)), size=1)+
+  labs(x = " ", y=" ")+
+  scale_x_date(date_labels = "%b")+
+  geom_vline(xintercept = as.numeric(as.Date(c("1970-03-11"))), linetype=2,color="red")+
+  theme_classic()+
+  scale_fill_manual(values = c("gray", "gray","gray", "gray", "black"))+
+  scale_color_manual(values = c("gray", "gray","gray", "gray", "black")) + theme(legend.position = "none")
+
+
+
+
+
+trends3 <- ggplot(lg_ts %>% filter(search_term == 'seafood_recipe'), aes(x= m_day, y=google_value, group=as.factor(year), fill=as.factor(year))) +
+  geom_line(aes(color=as.factor(year)), size=1)+
+  labs(x = " ", y=" ")+
+  scale_x_date(date_labels = "%b")+
+  geom_vline(xintercept = as.numeric(as.Date(c("1970-03-11"))), linetype=2,color="red")+
+  theme_classic()+
+  scale_fill_manual(values = c("gray", "gray","gray", "gray", "black"))+
+  scale_color_manual(values = c("gray", "gray","gray", "gray", "black")) + theme(legend.position = "none")
+
+trends4 <- ggplot(lg_ts %>% filter(search_term == 'sushi_take_out'), aes(x= m_day, y=google_value, group=as.factor(year), fill=as.factor(year))) +
+  geom_line(aes(color=as.factor(year)), size=1)+
+  labs(x = " ", y=" ")+
+  scale_x_date(date_labels = "%b")+
+  geom_vline(xintercept = as.numeric(as.Date(c("1970-03-11"))), linetype=2,color="red")+
+  theme_classic()+
+  scale_fill_manual(values = c("gray", "gray","gray", "gray", "black"))+
+  scale_color_manual(values = c("gray", "gray","gray", "gray", "black")) + theme(legend.position = "none")
+
+trends5 <- ggplot(lg_ts %>% filter(search_term == 'bbq_restaurant'), aes(x= m_day, y=google_value, group=as.factor(year), fill=as.factor(year))) +
+  geom_line(aes(color=as.factor(year)), size=1)+
+  labs(x = " ", y=" ")+
+  scale_x_date(date_labels = "%b")+
+  geom_vline(xintercept = as.numeric(as.Date(c("1970-03-11"))), linetype=2,color="red")+
+  theme_classic()+
+  scale_fill_manual(values = c("gray", "gray","gray", "gray", "black"))+
+  scale_color_manual(values = c("gray", "gray","gray", "gray", "black")) + theme(legend.position = "none")
+
+
+
+# Build plot 3f
+
+
+markets_all  <- read.csv('cleaned_data/US_seafood_market_foot_traffic_V2_Aug2020.csv',header=T)
+
+markets_all$date <- as.Date(markets_all$date)
+
+per_day_stats = markets_all %>%
+  group_by(date) %>%
+  dplyr::summarize(total_visits = sum(visits), total_devices = mean(total_devices_seen),total_locations = mean(length(table(location_name)))) %>%
+  mutate(total_visits_per_device = total_visits/total_devices/total_locations)
+
+###UPDATE: This now normalizes by number of businesses in each time period as well ####
+
+rollmean_visits <- per_day_stats %>%
+  tq_mutate(
+    # tq_mutate args
+    select     = total_visits_per_device,
+    mutate_fun = rollapply, 
+    width      = 7,
+    align      = "right",
+    FUN        = mean,
+    col_rename = "mean_7"
+  ) 
+
+rollmean_visits$year = as.numeric(format(rollmean_visits$date,'%Y'))
+rollmean_visits$julian_day = as.numeric(format(rollmean_visits$date,'%j'))
+rollmean_visits$date <- as.Date(rollmean_visits$date)
+rollmean_visits$m_day = as.Date(format(rollmean_visits$date,'%m-%d'),format='%m-%d')
+
+temporal <- ggplot(data = rollmean_visits,aes(x=m_day,y=mean_7,color=as.factor(year),group=as.factor(year))) + geom_line(size=1) + 
+  scale_color_manual(values = c("gray", "gray", "black"))+
+  theme_classic() + ylab("Seafood market foot traffic") + xlab('') + theme(legend.position = 'none',panel.border = element_blank(),panel.grid.major = element_blank(),panel.grid.minor = element_blank()) +
+  scale_x_date(date_labels = "%b",breaks=c(as.Date("2020-01-01"),as.Date("2020-04-01"),as.Date("2020-07-01"),as.Date("2020-10-01")))+
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-11"))), linetype=2,color="red")
+
+
+
+
+
+
+require(ggpubr)
+figure=ggarrange(trends1,trends2,trends3,trends4,trends5, temporal ,ncol=3, nrow=2, labels=c('(a) seafood restaurant','(b) seafood delivery','(c) seafood recipe','(d) sushi take out','(e) bbq restaurant','(f)'),label.x = 0.2, label.y = 1,align='hv',hjust=0,font.label=list(size = 10, color = "black", face = "plain", family = NULL))
+figure=annotate_figure(figure,bottom = text_grob("Time", color = "black",hjust = 0.5,vjust=-1, size = 12),left = text_grob("Google Trend Value", color = "black", rot = 90,size=12,vjust=2,hjust=0.4))
+figure
+
+ggsave(filename = 'fig3a_f.jpeg',dpi=600,plot = figure)
+
+
+```
+
+
+
+# Figure 3f. Seafood market foot traffic over time
+
+```{r,echo=F,eval=F,cache=T,message=F,warning=F,fig.cap='Panel (f) is the rolling mean of normalized (see methods) foot traffic data for all US fish and seafood markets.'}
+
+## IMPORTANT NOTE: We are not allowed to post the raw foot traffic data to Github. This can be obtained from the corresponding author (eastonrwhite@gmail.com) or directly from SafeGraph ##
+
+
+markets_all  <- read.csv('cleaned_data/US_seafood_market_foot_traffic_V2_Aug2020.csv',header=T)
+
+markets_all$date <- as.Date(markets_all$date)
+
+per_day_stats = markets_all %>%
+  group_by(date) %>%
+  dplyr::summarize(total_visits = sum(visits), total_devices = mean(total_devices_seen),total_locations = mean(length(table(location_name)))) %>%
+  mutate(total_visits_per_device = total_visits/total_devices/total_locations)
+
+###UPDATE: This now normalizes by number of businesses in each time period as well ####
+
+rollmean_visits <- per_day_stats %>%
+  tq_mutate(
+    # tq_mutate args
+    select     = total_visits_per_device,
+    mutate_fun = rollapply, 
+    width      = 7,
+    align      = "right",
+    FUN        = mean,
+    col_rename = "mean_7"
+  ) 
+
+rollmean_visits$year = as.numeric(format(rollmean_visits$date,'%Y'))
+rollmean_visits$julian_day = as.numeric(format(rollmean_visits$date,'%j'))
+
+write.csv(x = rollmean_visits,file = 'cleaned_data/rollmean_foot_traffic_visits.csv',quote = F,row.names = F)
+rollmean_visits$date <- as.Date(rollmean_visits$date)
+
+temporal <- ggplot(data = rollmean_visits,aes(x=julian_day,y=mean_7,color=as.factor(year))) + geom_line(size=1.5) + 
+  scale_color_manual(values = c("#D3D3D3", "#D3D3D3", "#00BFC4"))+
+  theme_classic() + ylab("Normalized US seafood market foot traffic") + xlab('') + theme(legend.position = 'none',axis.title.x = element_text(size = 18),axis.title.y = element_text(size = 22),panel.border = element_blank(),panel.grid.major = element_blank(),panel.grid.minor = element_blank(), axis.line = element_line(colour = "black",size=2),axis.text.y = element_text(size=16,color='grey27'),axis.text.x = element_text(size=22,color='grey27'))  + geom_vline(xintercept = 71,color='red',size=2.5,linetype='dashed')+
+  scale_x_continuous(labels=c('January','April','July','October'),breaks=c(1,90,180,270))
+  
+  
+ 
+  #  geom_label(x=125, y=5e-04, label="2020",color='black') + #geom_label(x=350, y=8e-04, label="2019",color='black') + 
+#temporal
+
+ggsave(filename = 'figures/Figure1f_V2.pdf',plot = temporal,width = 7,height = 7,units='in')
+ggsave(filename = 'figures/Figure1f_V2.png',plot = temporal,width = 7,height = 7,units='in',dpi=1000)
+
+#require(ggpubr)
+#figure=ggarrange(temporal, foot_traffic_map, ncol=2, nrow=1, common.legend = FALSE, labels=c('(a)','(b)'),label.x = 0.85, label.y = 0.95,font.label='plain')
+#figure=annotate_figure(figure,bottom = text_grob(" ", color = "black",hjust = 0.9,vjust=-1, x = 0.6, size = 10),left = text_grob(" ", color = "black", rot = 90,size=10,vjust=2,hjust=0.4))
+```
+
+
+```{r, echo=F,eval=F,message=F,warning=F,fig.height=4,fig.cap='Panel (f) is the rolling mean of normalized (see methods) foot traffic data for all US fish and seafood markets.'}
+
+# This code displays code even if SafeGraph data is not loaded
+
+img1_path <- "figures/Figure1f.png"
+img1 <- readPNG(img1_path, native = TRUE, info = TRUE)
+grid.raster(img1)
+```
+
+\clearpage
+
+
+
+
+
+
+
+# Figure S1. Seafood market foot traffic per state over time (Jan - Mar)
 
 ```{r,echo=F,eval=F,message=F,warning=F,fig.cap='State-level monthly mean of normalized (see Methods) foot traffic data for fish and seafood markets for the beginning of 2019 and 2020.',fig.height=6}
-markets_all  <- read.csv('cleaned_data/foot_traffic/US_seafood_market_foot_traffic.csv',header=T)
+markets_all  <- read.csv('cleaned_data/US_seafood_market_foot_traffic_V2_Aug2020.csv',header=T)
 #
 library(dplyr)
 
@@ -285,7 +564,7 @@ total_by_state <- markets_all %>%
 visits_by_business <- markets_all %>%
   dplyr::filter(state %in% total_by_state$state) %>% 
   dplyr::group_by(safegraph_place_id,state,year,month) %>%
-  dplyr::summarize(normalized_visits= 1000000*mean(visits/total_devices_seen_US_day)) 
+  dplyr::summarize(normalized_visits= 1000000*mean(visits/total_devices_seen)) 
 
 visits_by_state <- visits_by_business %>%
   na.omit() %>%
@@ -301,7 +580,7 @@ require(magick)
 
 build_map = function(Month){
 
-Months <- c('January','February','March')  
+Months <- c('January','February','March','April','May','June','July','August')  
   
 visits_by_state_subset <- visits_by_state %>%
   dplyr::filter(month==Month) %>%
@@ -314,11 +593,14 @@ visits_by_state_subset <- visits_by_state %>%
 #   theme(legend.position = "top",panel.background = element_rect(color = "black"),plot.caption = element_text(size=16)) +
 #   labs(fill = 'Normalized seafood market visits') + labs(caption = paste(Year,Month,sep='-'))
 
-foot_traffic_map2020 <- plot_usmap(data = visits_by_state_subset %>% filter(year==2020), values = "percent_change", labels=FALSE) + scale_fill_viridis(begin=0,end=1,limits = c(0.45, 1.6),na.value="lightgrey") + guides(fill = guide_colorbar(barwidth = 8)) + 
+foot_traffic_map2020 <- plot_usmap(data = visits_by_state_subset %>% filter(year==2020), values = "percent_change", labels=FALSE) + 
+  scale_fill_distiller(type = 'div',palette='RdBu',limits = c(0.3, 1.7),na.value="lightgrey",direction=1) + guides(fill = guide_colorbar(barwidth = 8)) +
   theme(legend.position = "top",panel.background = element_rect(color = "black"),plot.caption = element_text(size=16,hjust = 0)) +
-  labs(fill = 'Percent change') + labs(caption = paste('Percent change for ',Months[Month],sep=''))
+  labs(fill = 'Proportional change (2020 versus 2019)') + 
+  labs(caption = paste(Months[Month],sep=''))
+  #labs(caption = paste('Percent change for ',Months[Month],sep=''))
 
-ggsave(filename = paste0("figures/foot_traffic_percent_change_",Months[Month],".png"),width = 8,height=8,dpi = 150)
+ggsave(filename = paste0("figures/foot_traffic_percent_change_V2_",Month,".png"),width = 8,height=8,dpi = 150)
 return(foot_traffic_map2020)
 }
 
@@ -333,10 +615,15 @@ return(foot_traffic_map2020)
 Jan <- build_map(1)
 Feb <- build_map(2)
 Mar <- build_map(3)
+Apr <- build_map(4)
+May <- build_map(5)
+Jun <- build_map(6)
+Jul <- build_map(7)
+Aug <- build_map(8)
 
-foot_traffic_change <- ggarrange(Jan,Feb,Mar, ncol=1, nrow=3, common.legend = TRUE,label.x = 0.85, label.y = 0.95,font.label='plain')
+foot_traffic_change <- ggarrange(Jan,Feb,Mar,Apr,May,Jun,Jul,Aug, nrow=2,ncol=4,  common.legend = TRUE,label.x = 0.85, label.y = 0.95,font.label='plain')
 foot_traffic_change
-ggsave(filename = 'figures/foot_traffic_change.png',plot = foot_traffic_change,width = 7,height = 7,units='in',dpi=1000)
+ggsave(filename = 'figures/foot_traffic_change.png',plot = foot_traffic_change,width = 7,height = 5,units='in',dpi=500)
 #annotate_figure(figure,bottom = text_grob(" ", color = "black",hjust = 0.9,vjust=-1, x = 0.6, size = 10),left = text_grob(" ", color = "black", rot = 90,size=10,vjust=2,hjust=0.4))
 
 visits_by_state_subset <- visits_by_state %>%
@@ -349,11 +636,17 @@ write.csv(x = visits_by_state_subset,file = 'cleaned_data/visits_by_state_subset
 
 
 # Combine images into gif/video
-list.files(path = "figures", pattern = "foot_traffic_percent_change", full.names = T) %>% 
+list.files(path = "figures", pattern = "foot_traffic_percent_change_V2", full.names = T) %>% 
    map(image_read) %>% # reads each path file
    image_join() %>% # joins image
    image_animate(fps=0.5) %>% # animates, can opt for number of loops
-   image_write("figures/animated_foot_traffic_map.gif") 
+   image_write("figures/animated_foot_traffic_mapV2.gif") 
+
+list.files(path = "figures", pattern = "foot_traffic_percent_change_V2", full.names = T) %>% 
+   map(image_read) %>% # reads each path file
+   image_join() %>% # joins image
+   image_animate(fps=0.5) %>% # animates, can opt for number of loops
+   image_write("figures/animated_foot_traffic_mapV2.mp4") 
 ```
 
 
@@ -384,7 +677,7 @@ We examined 2,800 fish and seafood markets in US across the US. We noted that `r
 
 
 
-# Alaska fish landings data 
+# Figure S2. Alaska fish landings data 
 
 ```{r,echo=F,cache=T,message=F,warning=F,fig.cap='Alaskan weekly landings (pounds) for halibut (Hippoglossus stenolepis) and sablefish (Anoplopoma fimbria) for 2020 (black line) and past years (grey lines). Data is updated at https://www.fisheries.noaa.gov/alaska/commercial-fishing/fisheries-catch-and-landings-reports'}
 # Pull in landings data
@@ -398,22 +691,149 @@ max_week_current_year <- max(alaska$MonthWeek[alaska$Year==2020])
 alaska$color='lightgrey'
 alaska$color[alaska$Year==2020] = 'black'
 
-alaska_landings <- ggplot(data=alaska,mapping=aes(x=MonthWeek,y=Pounds,color=color,group=as.factor(Year))) + geom_line() + facet_wrap(~Species)+ scale_colour_identity() +  theme_bw() + theme(legend.position = 'none',axis.title.x = element_blank(),axis.title.y = element_text(size = 12),panel.border = element_blank(),panel.grid.major = element_blank(),panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+alaska_landings <- ggplot(data=alaska,mapping=aes(x=MonthWeek,y=Pounds,color=color,group=as.factor(Year))) + geom_line() + facet_wrap(~Species)+
+  xlab('Week of year')+ scale_colour_identity() +  theme_bw() + theme(legend.position = 'none',axis.title.y = element_text(size = 12),panel.border = element_blank(),panel.grid.major = element_blank(),panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
    annotate('text',label = "2020", x = 20, y = 70000, size = 5, colour = "black",hjust = 0) + 
     annotate('text',label = "2017-2019", x = 20, y = 10000, size = 5, colour = "grey",hjust = 0)
 alaska_landings
 
 # Calculate 2020 totals versus mean of previous years
 
-totals <- alaska %>%
-  filter(MonthWeek<max(alaska$MonthWeek[alaska$Year==2020]),Year>2017) %>%
+totals_pre_jun <- alaska %>%
+  filter(MonthWeek<22,Year>2016) %>%
   group_by(Species,Year) %>%
-  dplyr::summarize(total_catch = sum(Pounds),total_weeks = n())
+  dplyr::summarize(total_catch = sum(Pounds),total_weeks = n(),CPUE = sum(Pounds)/n())
+
+totals <- alaska %>%
+  filter(MonthWeek<max(alaska$MonthWeek[alaska$Year==2020]),Year>2016) %>%
+  group_by(Species,Year) %>%
+  dplyr::summarize(total_catch = sum(Pounds),total_weeks = n(),CPUE = sum(Pounds)/n())
 
 ```
 
 
-For the first `r max_week_current_year` weeks of the year, there were `r round(100-100*with(totals,total_catch[Year==2020 & Species=='halibut'])/mean(with(totals,total_catch[Year<2020 & Species=='halibut'])),1)`% declines in Alaskan halibut landings in 2020 compared to the previous two years. There were `r round(100-100*with(totals,total_catch[Year==2020 & Species=='sablefish'])/mean(with(totals,total_catch[Year<2020 & Species=='sablefish'])),1)`% declines in Alaskan sablefish landings in 2020 compared to the previous two years.
+For the first `r max_week_current_year` weeks of the year, there were `r round(100-100*with(totals,total_catch[Year==2020 & Species=='halibut'])/mean(with(totals,total_catch[Year<2020 & Species=='halibut'])),1)`% declines in Alaskan halibut landings in 2020 compared to the previous two years. There were `r round(100-100*with(totals,CPUE[Year==2020 & Species=='sablefish'])/mean(with(totals,CPUE[Year<2020 & Species=='sablefish'])),1)`% declines in Alaskan sablefish landings in 2020 compared to the previous two years. These differences were more distinct prior to the start of June: `r round(100-100*with(totals_pre_jun,total_catch[Year==2020 & Species=='halibut'])/mean(with(totals_pre_jun,total_catch[Year<2020 & Species=='halibut'])),1)`% declines in Alaskan halibut landings and `r round(100-100*with(totals_pre_jun,total_catch[Year==2020 & Species=='sablefish'])/mean(with(totals_pre_jun,total_catch[Year<2020 & Species=='sablefish'])),1)`% declines in Alaskan sablefish landings
+
+
+# Figure S3. Map of news articles 
+
+```{r,echo=F,cache=T,message=F,warning=F,fig.cap='State-level monthly number of news articles published for search terms (covid OR coronavirus) AND (seafood OR fishery OR fisheries OR aquaculture) AND [list of all state and territory names].'  }
+
+# Set map theme
+theme_map <- function(...) {
+  theme_minimal() +
+    theme(
+      text = element_text(color = "#22211d"),
+      axis.line = element_blank(),
+      axis.text.x = element_blank(),
+      axis.text.y = element_blank(),
+      axis.ticks = element_blank(),
+      axis.title.x = element_blank(),
+      axis.title.y = element_blank(),
+      # panel.grid.minor = element_line(color = "#ebebe5", size = 0.2),
+      panel.grid.major = element_line(color = "#ebebe5", size = 0.2),
+      panel.grid.minor = element_blank(),
+      plot.background = element_rect(fill = "#f5f5f2", color = NA), 
+      panel.background = element_rect(fill = "#f5f5f2", color = NA), 
+      legend.background = element_rect(fill = "#f5f5f2", color = NA),
+      panel.border = element_blank(),
+      ...
+    )
+}
+
+# Load data for all states
+state_files <- list.files("seafoodGDELT/COVID-19 US/statesFullArticles")
+
+states <- fromJSON(file = file.path("seafoodGDELT","COVID-19 US", "statesFullArticles", state_files[1]))
+states <- data.frame(matrix(unlist(states), nrow=length(states), byrow=T))
+colnames(states) <- c("domain", "language", "seendate", "socialimage", "sourcecountry", "title", "url", "url_mobile")
+states <- states %>%
+  separate(col = seendate, into = c("date", "time"), sep = "T") %>%
+  mutate(date = as.Date(date, format = "%Y%m%d"))
+states$state <- substr(state_files[1], 1, nchar(state_files[1])-4)
+
+for(i in 2:length(state_files)){
+  states_temp <- fromJSON(file = file.path("seafoodGDELT","COVID-19 US", "statesFullArticles", state_files[i]))
+  states_temp <- data.frame(matrix(unlist(states_temp), nrow=length(states_temp), byrow=T))
+  colnames(states_temp) <- c("domain", "language", "seendate", "socialimage", "sourcecountry", "title", "url", "url_mobile")
+  states_temp <- states_temp %>%
+    separate(col = seendate, into = c("date", "time"), sep = "T") %>%
+    mutate(date = as.Date(date, format = "%Y%m%d"))
+  states_temp$state <- substr(state_files[i], 1, nchar(state_files[i])-4)
+  
+  states <- states %>%
+    bind_rows(states_temp)
+}
+
+# Convert date/time to date format and select unique titles for each state
+states <- states %>%
+  mutate(week = strftime(date, format = "%V")) %>%
+  filter(!(str_detect(domain, "iheart.com$"))) %>% # remove irrelevant sources with high number of hits
+  mutate(title = substr(title, start = 1, stop = 30)) %>%
+  dplyr::select(state, date, week, title) %>%
+  distinct() 
+states$week <- as.numeric(states$week)
+
+
+
+### Plot articles by state per capita
+
+
+# Summarize counts by month
+states$month <- month(states$date)
+
+states_month <- states %>%
+  group_by(month, state) %>% 
+  filter(month < 9) %>%
+  tally()
+
+
+# Plot monthly state article counts (duplicates of articles cannot be removed)
+months <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug")
+
+# Add in zeros for missing states
+state_month_list <- c(unique(states$state), "Ohio", "Iowa", "Utah")
+state_month_list <- expand_grid(state_month_list, 1:8)
+colnames(state_month_list) <- c("state", "month")
+
+states_month <- states_month %>%
+  full_join(state_month_list, by = c("month", "state"))
+states_month$n[is.na(states_month$n)] <- 0
+
+states_month <- states_month %>% 
+  ungroup %>%
+  mutate(month = case_when(
+    month == 1 ~ "Jan",
+    month == 2 ~ "Feb",
+    month == 3 ~ "Mar",
+    month == 4 ~ "Apr",
+    month == 5 ~ "May",
+    month == 6 ~ "Jun",
+    month == 7 ~ "Jul",
+    month == 8 ~ "Aug",
+  ))
+
+states_month <- left_join(states_month,statepop,by=c('state'='full'))
+states_month$articles_per_capita <- 10000*states_month$n/states_month$pop_2015
+
+states_month$articles_per_capita[states_month$articles_per_capita<0.01] = 0.01
+states_month$articles_per_capita[states_month$articles_per_capita>1] = 1
+states_month$month <- ordered(states_month$month,levels= c("Jan","Feb", "Mar", "Apr", "May","Jun", "Jul", "Aug"))
+
+g <- plot_usmap(data = states_month, values = "articles_per_capita") + 
+  scale_fill_continuous(name = "No. of articles per 10000 people") + 
+  theme(legend.position = "top",panel.background = element_rect(color = "black")) +
+  facet_wrap(~month, ncol = 3) 
+
+g
+
+#jpeg(filename = "states_monthly.jpeg", height = 5, width = 4, units = "in", res = 400)
+#print(g)
+#dev.off()
+
+```
+
+
 
 <!--
 # References
